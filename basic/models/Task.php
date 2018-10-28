@@ -3,18 +3,21 @@ namespace app\models;
 use yii\base\Model;
 class Task extends Model
 {
-    public $hello;
-    public $test;
+    public $name_task;
+    public $id_user;
+    public $data_task;
     public function rules()
     {
         return [
-            [['hello'], 'helloValidator']
+            [['id_user'], 'required'],
+            [['name_task'], 'myValidator'],
+            [['data_task'], 'safe']
         ];
     }
-    public function helloValidator($attribute, $params)
+    public function myValidator($attribute, $params)
     {
-        if ($this->$attribute != 'Hello World') {
-            $this->addError($attribute, 'Это совсем не приветствие');
+        if (strlen($this->$attribute) > 5) {
+            $this->addError($attribute, 'Незнаительно маленькое назание задачи!');
         }
     }
 }
