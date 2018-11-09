@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Sergey
+ * Date: 27.10.2018
+ * Time: 20:12
+ */
 namespace app\models;
 use yii\base\Model;
 use app\components\validators\MyValidator;
@@ -24,9 +30,9 @@ class Task extends Model
 
     public function myValidate($attribute, $params)
     {
-        if(strlen($this->$attribute) > 15){
+        if(strlen($this->$attribute) < 10){
             $this->addError($attribute,
-                "Валидацияне не прошла! Описание задания превышает допустимое колличество символов!");
+                "Валидацияне прошла! Опишите задачу подробнее!");
         }
     }
 }

@@ -78,3 +78,4 @@ class Users extends \yii\db\ActiveRecord
         return $this->hasOne(UserRoles::className(), ['id' => 'role_id']);
     }
 }
+    pu
