@@ -2,8 +2,10 @@
 
 namespace app\controllers;
 
+use app\models\tables\Tasks;
 use Yii;
 use yii\filters\AccessControl;
+use yii\filters\PageCache;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -35,6 +37,11 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
+            'cache' => [
+                'class' => PageCache::class,
+                'duration' => 200,
+                'only' => ['contact']
+            ]
         ];
     }
 
@@ -125,4 +132,15 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
+
+    public function actionHello()
+    {
+        return $this->render('hello');
+    }
+
+    /*public function actionTasks()
+    {
+        return AdminTasksController::className()->index;
+        //return $this->render('hello');
+    }*/
 }

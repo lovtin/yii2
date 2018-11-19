@@ -6,15 +6,18 @@ $db = require __DIR__ . '/db.php';
 $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
-    'bootstrap' => ['log'],
+    'bootstrap' => ['log', 'bootstrap'],
     'aliases' => [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
     ],
     'components' => [
+        'bootstrap' => [
+            'class' => \app\components\Bootstrap::class
+        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'c-cSUFmdE2ou6Gz01pubj0dhGAYc93ol',
+            'cookieValidationKey' => 'Ktb03SSH6Te1zY7qLjXdktxOnpMcr6Da',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',

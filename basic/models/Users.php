@@ -3,12 +3,14 @@
 namespace app\models\tables;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "users".
  *
  * @property int $id
- * @property string $username
+ * @property string $login
  * @property string $password
  * @property int $role_id
  *
@@ -32,11 +34,11 @@ class Users extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['username', 'password'], 'required'],
+            [['login', 'password'], 'required'],
             [['role_id'], 'integer'],
-            [['username'], 'string', 'max' => 50],
+            [['login'], 'string', 'max' => 50],
             [['password'], 'string', 'max' => 100],
-            [['username'], 'unique'],
+            [['login'], 'unique'],
             [['role_id'], 'exist', 'skipOnError' => true, 'targetClass' => UserRoles::className(), 'targetAttribute' => ['role_id' => 'id']],
         ];
     }
@@ -46,11 +48,21 @@ class Users extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
+
         return [
             'id' => 'ID',
-            'username' => 'Username',
+            'login' => 'Login',
             'password' => 'Password',
-            'role_id' => 'Role ID',
+            'role_id' => 'Роли пользователей',
+        ];
+    }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'username' => 'login',
+            'password'
         ];
     }
 
@@ -76,5 +88,15 @@ class Users extends \yii\db\ActiveRecord
     public function getRole()
     {
         return $this->hasOne(UserRoles::className(), ['id' => 'role_id']);
+    }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()')
+            ],
+        ];
     }
 }

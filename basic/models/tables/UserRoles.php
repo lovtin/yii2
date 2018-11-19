@@ -3,6 +3,8 @@
 namespace app\models\tables;
 
 use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\Expression;
 
 /**
  * This is the model class for table "user_roles".
@@ -50,4 +52,15 @@ class UserRoles extends \yii\db\ActiveRecord
     {
         return $this->hasMany(Users::className(), ['role_id' => 'id']);
     }
+
+    public function behaviors()
+    {
+        return [
+            [
+                'class' => TimestampBehavior::className(),
+                'value' => new Expression('NOW()')
+            ],
+        ];
+    }
+
 }

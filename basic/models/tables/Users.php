@@ -53,4 +53,13 @@ class Users extends \yii\db\ActiveRecord
     {
         return $this->hasOne(UserRoles::class, ['id' => 'role_id']);
     }
+
+    public function fields()
+    {
+        return [
+            'id',
+            'username' => 'login',
+            'password'
+        ];
+    }
 }

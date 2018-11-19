@@ -4,7 +4,10 @@
 namespace app\controllers;
 
 
+use app\behaviors\MyBehavior;
 use app\models\tables\Users;
+use app\models\Test;
+use yii\base\Event;
 use yii\web\Controller;
 
 class ExampleController extends Controller
@@ -61,4 +64,51 @@ class ExampleController extends Controller
         exit;
 
     }
+
+
+    public function actionEvents()
+    {
+        $handler = function($event){
+            var_dump($event);
+            echo "Обработчик 1 сработал!!!";
+        };
+        Event::on(Test::class, Test::EVENT_FOO_START, $handler);
+
+        $model = new Test();
+        $model->foo();
+        exit;
+    }
+
+    public function actionBeh()
+    {
+        $model = new Test([
+            'title' => 'model title'
+        ]);
+
+        $model->attachBehavior("my", [
+            'class' => MyBehavior::class,
+        ]);
+
+      //  $model->detachBehavior("my");
+
+        $model->message();
+        exit;
+    }
+
+    public function actionCache()
+    {
+        $cache = \Yii::$app->cache;
+        $key = 'number';
+
+        if($cache->exists($key)){
+            $number = $cache->get($key);
+        }else{
+            $number = rand();
+            $cache->set($key, $number, 5);
+        }
+
+        var_dump($number);
+        exit;
+    }
+
 }

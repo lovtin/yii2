@@ -1,38 +1,54 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: Sergey
+ * Date: 25.10.2018
+ * Time: 20:41
+ */
 namespace app\controllers;
+
+use app\models\filters\TasksFilter;
+use app\models\tables\Tasks;
 use app\models\Task;
+use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 
 class TaskController extends Controller
 {
-    public function actionIndex(){
+   public function actionIndex()
+   {
+       if($_POST['Tasks']['changeMonth'] == NULL) {
+           $searchModel = new TasksFilter();
+           $dataProvider = $searchModel->search(\Yii::$app->request->queryParams);
 
-        $task = new Task();
-        $task->setAttributes([
-            'taskNumber' => '1',
-            'taskName' => 'Разработать концепцию календаря',
-            'taskDescription' => 'Razrabotat\' task tracker v kachestve domashnego zadaniya',
-            'idEmployee' => '2',
-            'taskTime' => '2018-11-06, 16:00',
+           return $this->render('index', [
+               'searchModel' => $searchModel,
+               'dataProvider' => $dataProvider,
+           ]);
+       }else{
+           $dataProvider = new ActiveDataProvider([
+               'query' => Tasks::getByMonthQuery($_POST['Tasks']['changeMonth'])
+           ]);
+           return $this->render('index', [
+               'dataProvider' => $dataProvider,
+           ]);
+       }
+   }
+
+    public function actionOne($id, $login)
+    {
+        $taskData = Tasks::findOne($id);
+        $taskName = $taskData->task_name;
+        $taskDescription = $taskData->description;
+        $userName = $login;
+        $date = $taskData->dead_line;
+
+        return $this->render('task_item', [
+            'taskName' => $taskName,
+            'taskDescription' => $taskDescription,
+            'userName' => $userName,
+            'date' => $date
         ]);
-
-        $taskArray = $task->toArray();
-        $v = $task->validate();
-        $e = $task->getErrors();
-        //var_dump($v);
-        //var_dump($e);
-        if(isset($e['taskDescription'][0])) {
-            $taskArray['taskDescription'] = $e['taskDescription'][0];
-        }
-        if(isset($e['idEmployee'][0])) {
-            $taskArray['idEmployee'] = $e['idEmployee'][0];
-        }
-            return $this->render('index', [
-                'taskNumber' => $taskArray['taskNumber'],
-                'taskName' => $taskArray['taskName'],
-                'taskDescription' => $taskArray['taskDescription'],
-                'idEmployee' => $taskArray['idEmployee'],
-                'taskTime' => $taskArray['taskTime']
-            ]);
     }
+
 }
